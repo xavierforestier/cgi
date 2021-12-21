@@ -1,3 +1,4 @@
+//Version 1.0 21/12/21
 var timeout=0;
 function toggleFav(conn) {
 	const favs = JSON.parse(window.localStorage["fav"] || "[]");
@@ -13,10 +14,13 @@ function toggleFav(conn) {
 }
 function setDef(conn) {
 	const favs = JSON.parse(window.localStorage["fav"] || "[]");
-	window.localStorage.setItem("auto_connect",conn);
-	if(favs.indexOf(conn) < 0) {
-		favs.push(conn);
-		window.localStorage.setItem("fav", JSON.stringify(favs));
+	window.localStorage.removeItem("auto_connect");
+	if (conn) {
+		window.localStorage.setItem("auto_connect",conn);
+		if(favs.indexOf(conn) < 0) {
+			favs.push(conn);
+			window.localStorage.setItem("fav", JSON.stringify(favs));
+		}
 	}
 	clearTimeout(timeout);
 	refreshProjet();
@@ -40,11 +44,11 @@ function refreshProjet(){
 			const jsonResp = JSON.parse(ajax.responseText);
 			var html="<table><tr><th>Connexion</th><th>Etat</th><th>Favoris</th></tr>";
 			//Les connexions actives
-			jsonResp.filter(conn=> conn.active).forEach(active => { html += "<tr class='text-success'><td>" + active.name + "</td><td>Connecté</td><td>" + ( active.name==def ?"<button disabled>Auto-connect</button>":"<button onclick='setDef(\"" +  active.name + "\")'>Défaut</button>") + "<button onclick='toggleFav(\"" +  active.name + "\")'>" + (favs.indexOf(active.name) < 0 ?"☆":"★") + "</button></td></tr>" });
+			jsonResp.filter(conn=> conn.active).forEach(active => { html += "<tr class='text-success'><td>" + active.name + "</td><td>Connect&eacute;</td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>" + (favs.indexOf(active.name) < 0 ?"&#11088;":"&#x2B50;") + "</button></td></tr>" });
 			//Les connexions favorites
-			jsonResp.filter(conn=> (!conn.active) && (favs.indexOf(conn.name) >= 0 )).forEach(active => { html += "<tr><td>" + active.name + "</td><td><button onclick='connect(\"" + active.name + "\")'>Se connecter</button></td><td>" + ( active.name==def ?"<button disabled>Défaut</button>":"<button onclick='setDef(\"" +  active.name + "\")'>Auto-connect</button>") + "<button onclick='toggleFav(\"" +  active.name + "\")'>★</button></td></tr>" });
+			jsonResp.filter(conn=> (!conn.active) && (favs.indexOf(conn.name) >= 0 )).forEach(active => { html += "<tr><td>" + active.name + "</td><td><button onclick='connect(\"" + active.name + "\")'>Se connecter</button></td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>&#11088;</button></td></tr>" });
 			//Le reste
-			jsonResp.filter(conn=> (!conn.active) && (favs.indexOf(conn.name) < 0 )).forEach(active => { html += "<tr><td>" + active.name + "</td><td><button onclick='connect(\"" + active.name + "\")'>Se connecter</button></td><td>" + ( active.name==def ?"<button disabled>Défaut</button>":"<button onclick='setDef(\"" +  active.name + "\")'>Auto-connect</button>") + "<button onclick='toggleFav(\"" +  active.name + "\")'>☆</button></td></tr>" });
+			jsonResp.filter(conn=> (!conn.active) && (favs.indexOf(conn.name) < 0 )).forEach(active => { html += "<tr><td>" + active.name + "</td><td><button onclick='connect(\"" + active.name + "\")'>Se connecter</button></td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>&#9734;</button></td></tr>" });
 			document.querySelector("div.list-group").innerHTML = html + "</table>";
 		}
 		timeout=window.setTimeout(refreshProjet, 30000);
