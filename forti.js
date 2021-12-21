@@ -44,7 +44,7 @@ function refreshProjet(){
 			const jsonResp = JSON.parse(ajax.responseText);
 			var html="<table><tr><th>Connexion</th><th>Etat</th><th>Favoris</th></tr>";
 			//Les connexions actives
-			jsonResp.filter(conn=> conn.active).forEach(active => { html += "<tr class='text-success'><td>" + active.name + "</td><td>Connect&eacute;</td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>" + (favs.indexOf(active.name) < 0 ?"&#11088;":"&#x2B50;") + "</button></td></tr>" });
+			jsonResp.filter(conn=> conn.active).forEach(active => { html += "<tr class='text-success'><td>" + active.name + "</td><td>Connect&eacute;</td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>" + (favs.indexOf(active.name) < 0 ?"&#9734;":"&#11088;") + "</button></td></tr>" });
 			//Les connexions favorites
 			jsonResp.filter(conn=> (!conn.active) && (favs.indexOf(conn.name) >= 0 )).forEach(active => { html += "<tr><td>" + active.name + "</td><td><button onclick='connect(\"" + active.name + "\")'>Se connecter</button></td><td>" + ( active.name==def ?"<button onclick='setDef()' style='font-weight:bold'>":"<button onclick='setDef(\"" +  active.name + "\")'>") + "Auto-connect</button><button onclick='toggleFav(\"" +  active.name + "\")'>&#11088;</button></td></tr>" });
 			//Le reste
