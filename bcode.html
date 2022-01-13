@@ -28,8 +28,13 @@
 				cameras.forEach(camera=> {
 					const opt = document.createElement('option');					
 					opt.text = camera.label;
-					opt.value = camera.deviceId;
-					document.querySelector("select#source").options.add(opt);
+					opt.value = camera.deviceId;					
+					const sel = document.querySelector("select#source");
+					sel.options.add(opt);
+					if(!sel.value) {
+						sel.value=camera.deviceId;
+						scan(camera.deviceId);
+					}
 				});
 			});
 		}
