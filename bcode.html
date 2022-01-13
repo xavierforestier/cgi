@@ -43,7 +43,7 @@
 			const video = document.querySelector(".video video");
 			var clearTimer;
 			codeReader.reset();
-			codeReader.decodeFromVideoDevice(devId, 'video', (result, err) => {
+			if(devId) codeReader.decodeFromVideoDevice(devId, 'video', (result, err) => {
 				if (result) {
 					window.clearTimeout(clearTimer);
 					overlay.width  = video.videoWidth;
