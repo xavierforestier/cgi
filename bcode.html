@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Scan me</title>
+	<style>
+		.video {
+			/*max-width: 100%;
+			max-height: 100%;*/
+		}
+		.video video, .video canvas {
+			/*width: 800px;
+			height: 600px;*/
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		select#source {
+			position : sticky;
+	</style>
+	<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+	<script type="text/javascript">
+		const codeReader = new ZXing.BrowserMultiFormatReader();
+		function init() {
+			//ListDevice	
+			codeReader.listVideoInputDevices().then((cameras)=>{
+				cameras.forEach(camera=> {
+					const opt = document.createElement('option');					
+					opt.text = camera.label;
+					opt.value = camera.deviceId;
+					document.querySelector("select#source").options.add(opt);
+				});
+			});
+		}
+		function scan(devId) {
+			const overlay = document.querySelector(".video canvas");
+			const video = document.querySelector(".video video");
+			var clearTimer;
+			codeReader.reset();
+			codeReader.decodeFromVideoDevice(devId, 'video', (result, err) => {
+				if (result) {
+					window.clearTimeout(clearTimer);
+					overlay.width  = video.videoWidth;
+					overlay.height  = video.videoHeight;
+					document.querySelector("#result").textContent = result.text;
+					const ctx = overlay.getContext('2d');
+					ctx.clearRect(0, 0, overlay.width, overlay.height);
+					ctx.drawImage(video,0, 0, overlay.width, overlay.height);
+					ctx.beginPath();
+					ctx.lineWidth=5;
+					ctx.strokeStyle ="red";
+					ctx.moveTo(result.resultPoints[0].x,result.resultPoints[0].y);    
+					ctx.lineTo(result.resultPoints[1].x,result.resultPoints[1].y); 
+					ctx.stroke();          
+					console.log(result.text);
+					console.log(result.resultPoints[0].x,result.resultPoints[0].y);
+					console.log(result.resultPoints[1].x,result.resultPoints[1].y);
+					clearTimer = window.setTimeout(() => {ctx.clearRect(0, 0, overlay.width, overlay.height);}, 1500);
+				}
+				if (err && !(err instanceof ZXing.NotFoundException)) {
+					console.error(err);
+					document.querySelector("#result").textContent = err;
+				}
+			});
+		}
+	</script>
+</head>
+<body onload="init()">
+<div class="video">
+<video id="video"></video>
+<canvas></canvas>
+</div>
+<select id="source" onchange="scan(this.value)"><option value="">--</option></select>
+<pre><code id="result"></code></pre>
+</body>
+</html>
