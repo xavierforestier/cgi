@@ -26,9 +26,9 @@
 			//ListDevice	
 			codeReader.listVideoInputDevices().then((cameras)=>{
 				cameras.forEach(camera=> {
-					const opt = document.createElement('option');					
-					opt.text = JSON.stringify(camera);
-					opt.value = camera.deviceId;					
+					const opt = document.createElement('option');
+					opt.text = camera.label;
+					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":"environment"}');				
 					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
 					if(!sel.value) {
@@ -43,7 +43,8 @@
 			const video = document.querySelector(".video video");
 			var clearTimer;
 			codeReader.reset();
-			if(devId) codeReader.decodeFromVideoDevice(devId, 'video', (result, err) => {
+			const constraints: MediaStreamConstraints = { video: JSON.parse(devId) };
+			if(devId) codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
 				if (result) {
 					window.clearTimeout(clearTimer);
 					overlay.width  = video.videoWidth;
