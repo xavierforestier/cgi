@@ -43,8 +43,7 @@
 			const video = document.querySelector(".video video");
 			var clearTimer;
 			codeReader.reset();
-			const constraints: MediaStreamConstraints = { video: JSON.parse(devId) };
-			if(devId) codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
+			if(devId) codeReader.decodeFromConstraints({ video: JSON.parse(devId) }, 'video', (result, err) => {
 				if (result) {
 					window.clearTimeout(clearTimer);
 					overlay.width  = video.videoWidth;
