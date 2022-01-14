@@ -27,7 +27,7 @@
 			codeReader.listVideoInputDevices().then((cameras)=>{
 				cameras.forEach(camera=> {
 					const opt = document.createElement('option');					
-					opt.text = camera.kind + "-" + camera.deviceId + '-' + camera.label;
+					opt.text = JSON.stringify(camera);
 					opt.value = camera.deviceId;					
 					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
