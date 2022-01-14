@@ -32,11 +32,11 @@
 					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
 				});
-				if(!sel.value) {
-					sel.value=sel.options[0].value;
-					scan(sel.value);
-				}
 			});
+			if(!sel.value) {
+				sel.value='{"facingMode":"environment"}';
+				scan(sel.value);
+			}
 		}
 		function scan(devId) {
 			const overlay = document.querySelector(".video canvas");
