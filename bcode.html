@@ -23,27 +23,28 @@
 	<script type="text/javascript">
 		const codeReader = new ZXing.BrowserMultiFormatReader();
 		function init() {
-			//ListDevice	
+			//ListDevice
 			codeReader.listVideoInputDevices().then((cameras)=>{
-				cameras.forEach(camera=> {
+				cameras.forEach(camera=>{
 					const opt = document.createElement('option');
 					opt.text = camera.label;
-					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":"environment"}');				
+					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":"environment"}');
 					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
-					if(!sel.value) {
-						sel.value=camera.deviceId;
-						scan(camera.deviceId);
-					}
 				});
+				if(!sel.value) {
+					sel.value=sel.options[0].value;
+					scan(sel.value);
+				}
 			});
 		}
 		function scan(devId) {
 			const overlay = document.querySelector(".video canvas");
 			const video = document.querySelector(".video video");
 			var clearTimer;
-			codeReader.reset();
-			if(devId) codeReader.decodeFromConstraints({ video: JSON.parse(devId) }, 'video', (result, err) => {
+			codeReader.reset(); 
+			const constraints: MediaStreamConstraints = { video: devId };
+			if(devId) codeReader.decodeFromConstraints(constraints, 'video', (result, err) => {
 				if (result) {
 					window.clearTimeout(clearTimer);
 					overlay.width  = video.videoWidth;
@@ -55,7 +56,7 @@
 					ctx.beginPath();
 					ctx.lineWidth=5;
 					ctx.strokeStyle ="red";
-					ctx.moveTo(result.resultPoints[0].x,result.resultPoints[0].y);    
+					ctx.moveTo(result.resultPoints[0].x,result.resultPoints[0].y);
 					ctx.lineTo(result.resultPoints[1].x,result.resultPoints[1].y); 
 					ctx.stroke();          
 					console.log(result.text);
@@ -78,5 +79,7 @@
 </div>
 <select id="source" onchange="scan(this.value)"><option value='{"facingMode":"environment"}'>Environnement</option><option value='{"facingMode":"user"}'>User</option></select>
 <pre><code id="result"></code></pre>
+
 </body>
+
 </html>
