@@ -28,13 +28,13 @@
 				cameras.forEach(camera=>{
 					const opt = document.createElement('option');
 					opt.text = camera.label;
-					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":"environment"}');
+					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":' + '"exact":"environment"}}');
 					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
 				});
 			});
 			if(!sel.value) {
-				sel.value='{"facingMode":"environment"}';
+				sel.value='{"facingMode":{"ideal":"environment"}}';
 				scan(sel.value);
 			}
 		}
