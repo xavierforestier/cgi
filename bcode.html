@@ -24,12 +24,12 @@
 		const codeReader = new ZXing.BrowserMultiFormatReader();
 		function init() {
 			//ListDevice
+			const sel = document.querySelector("select#source");
 			codeReader.listVideoInputDevices().then((cameras)=>{
 				cameras.forEach(camera=>{
 					const opt = document.createElement('option');
 					opt.text = camera.label;
 					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":' + '"exact":"environment"}}');
-					const sel = document.querySelector("select#source");
 					sel.options.add(opt);
 				});
 			});
