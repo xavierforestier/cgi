@@ -29,12 +29,12 @@
 				cameras.forEach(camera=>{
 					const opt = document.createElement('option');
 					opt.text = camera.label;
-					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":' + '"exact":"environment"}}');
+					opt.value = (camera.deviceId?'{"deviceId":{"exact":"' +  camera.deviceId +'"}}':'{"facingMode":"environment"}');
 					sel.options.add(opt);
 				});
 			});
 			if(!sel.value) {
-				sel.value='{"facingMode":{"ideal":"environment"}}';
+				sel.value='{"facingMode":environment"}';
 				scan(sel.value);
 			}
 		}
